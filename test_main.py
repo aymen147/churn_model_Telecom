@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from model_pipeline import prepare_data, train_model, evaluate_model, predict_with_mlflow
- import os
+import os
 
 @pytest.fixture
 def sample_data():
@@ -96,7 +96,6 @@ def test_evaluate_model_metrics(trained_model, sample_data):
     assert report_path.endswith('.txt')
     
     # Check if files were created
-    import os
     assert os.path.exists(conf_matrix_path)
     assert os.path.exists(report_path)
 
