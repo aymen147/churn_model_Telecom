@@ -29,7 +29,7 @@ jobs:
       
     - name: Run data tests
       run: |
-        python -m pytest tests/test_data.py
+        python -m pytest
         
     - name: Upload processed data
       uses: actions/upload-artifact@v2
