@@ -30,7 +30,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: prepared-data
-        path: ./data
+        path: prepared_data.joblib
 
     - name: Train model
       id: training
