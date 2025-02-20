@@ -1,0 +1,55 @@
+name: Model Deployment
+
+on:
+  workflow_run:
+    workflows: ["Model Training"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Download model artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: model-artifacts
+        
+    - name: Set up MLflow
+      run: |
+        pip install mlflow
+        mlflow server --host 127.0.0.1 --port 5002 &
+        sleep 10  # Wait for server to start
+        
+    - name: Deploy model
+      run: python main.py --deploy
+      
+    - name: Test deployment
+      run: python main.py --predict
+      
+    - name: Send email notification
+      if: always()
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: ${{secrets.MAIL_SERVER}}
+        server_port: 465
+        username: ${{secrets.MAIL_USERNAME}}
+        password: ${{secrets.MAIL_PASSWORD}}
+        subject: Model deploiement Status
+        body: Model Deployed completed. Check results in GitHub Actions.
+        to: ${{secrets.NOTIFICATION_EMAIL}}
+        from: GitHub Actions
