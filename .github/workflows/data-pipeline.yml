@@ -1,3 +1,4 @@
+# data-pipeline.yml
 name: Data Pipeline
 
 on:
@@ -27,10 +28,13 @@ jobs:
         pip install pytest
 
     - name: Run data preparation
+      id: data-prep
       run: python main.py --prepare
       continue-on-error: false
 
     - name: Run data tests
+      id: data-tests
+      if: success()
       run: python -m pytest
       continue-on-error: false
 
@@ -39,8 +43,8 @@ jobs:
       if: success()
       with:
         name: prepared-data
-        path: prepared_data.joblib
-        retention-days: 5
+        path: prepared_data.joblib  # This is the source file to upload
+        retention-days: 30
 
     - name: Process completion status
       if: always()
@@ -50,33 +54,3 @@ jobs:
         else
           echo "PIPELINE_STATUS=❌ Data pipeline failed" >> $GITHUB_ENV
         fi
-
-    - name: Update status
-      if: always()
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.TOKEN }}
-        script: |
-          const { owner, repo } = context.repo;
-          
-          // Create a detailed status message
-          const status = process.env.PIPELINE_STATUS;
-          const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-          const message = `${status}\n\nWorkflow run: [View details](${runUrl})`;
-          
-          try {
-            // Try to create a new issue
-            const issue = await github.rest.issues.create({
-              owner,
-              repo,
-              title: `Data Pipeline Run ${new Date().toISOString().split('T')[0]}`,
-              body: message,
-              labels: ['data-pipeline']
-            });
-            console.log(`Created issue #${issue.data.number}`);
-          } catch (error) {
-            console.log('Failed to create issue:', error.message);
-            
-            // Log the status to the workflow
-            console.log(message);
-          }

@@ -10,6 +10,7 @@ on:
 jobs:
   train-and-evaluate:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     
     steps:
     - name: Checkout repository
@@ -27,13 +28,23 @@ jobs:
         pip install pytest
 
     - name: Download processed data
+      id: download-data
       uses: actions/download-artifact@v4
       with:
         name: prepared-data
-        path: prepared_data.joblib
+        path: .  # This downloads to the root of workspace
+
+    - name: Verify data download
+      run: |
+        if [ ! -f "prepared_data.joblib" ]; then
+          echo "Error: prepared_data.joblib not found"
+          ls -la  # List files to help debug
+          exit 1
+        fi
 
     - name: Train model
       id: training
+      if: success()
       run: |
         python main.py --train
       continue-on-error: false
@@ -48,7 +59,7 @@ jobs:
     - name: Run model tests
       if: success()
       run: |
-        python -m pytest 
+        python -m pytest
 
     - name: Upload model artifacts
       if: success()
@@ -75,16 +86,18 @@ jobs:
     - name: Generate email body
       if: always()
       run: |
-        echo "Model Training Pipeline Status Update
+        cat << EOF > email_body.txt
+        Model Training Pipeline Status Update
         
         Status: ${{ env.MODEL_STATUS }}
         
         Details:
-        - Repository: ${{ github.repository }}
-        - Branch: ${{ github.ref }}
-        - Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        - Workflow Run ID: ${{ github.run_id }}
+        - Run Number: ${{ github.run_number }}
+        - Triggered By: ${{ github.event_name }}
         
-        This is an automated message from GitHub Actions." > email_body.txt
+        This is an automated message from GitHub Actions.
+        EOF
 
     - name: Send email notification
       if: always()
