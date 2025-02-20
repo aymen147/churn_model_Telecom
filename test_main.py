@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from model_pipeline import prepare_data, train_model, evaluate_model, predict_with_mlflow
+ import os
 
 @pytest.fixture
 def sample_data():
