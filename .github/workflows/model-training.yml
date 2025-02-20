@@ -12,42 +12,80 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v2
-    
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.8'
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        
+        pip install pytest
+
     - name: Download processed data
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: prepared-data
-        
+        path: ./data
+
     - name: Train model
-      run: python main.py --train
-      
-    - name: Evaluate model
-      run: python main.py --evaluate
-      
-    - name: Run model tests
+      id: training
       run: |
-        python -m pytest tests/test_model.py
-        
+        python main.py --train
+      continue-on-error: false
+
+    - name: Evaluate model
+      id: evaluation
+      if: success()
+      run: |
+        python main.py --evaluate
+      continue-on-error: false
+
+    - name: Run model tests
+      if: success()
+      run: |
+        python -m pytest 
+
     - name: Upload model artifacts
-      uses: actions/upload-artifact@v2
+      if: success()
+      uses: actions/upload-artifact@v4
       with:
         name: model-artifacts
         path: |
           model.joblib
-          confusion_matrix.png
-          classification_report.txt
-          
+          metrics/confusion_matrix.png
+          metrics/classification_report.txt
+        retention-days: 30
+
+    - name: Process completion status
+      if: always()
+      run: |
+        if [[ "${{ job.status }}" == "success" ]]; then
+          echo "MODEL_STATUS=✅ Model training completed successfully" >> $GITHUB_ENV
+          echo "EMAIL_SUBJECT=Model Training Success - $(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        else
+          echo "MODEL_STATUS=❌ Model training failed" >> $GITHUB_ENV
+          echo "EMAIL_SUBJECT=Model Training Failed - $(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        fi
+
+    - name: Generate email body
+      if: always()
+      run: |
+        echo "Model Training Pipeline Status Update
+        
+        Status: ${{ env.MODEL_STATUS }}
+        
+        Details:
+        - Repository: ${{ github.repository }}
+        - Branch: ${{ github.ref }}
+        - Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        
+        This is an automated message from GitHub Actions." > email_body.txt
+
     - name: Send email notification
       if: always()
       uses: dawidd6/action-send-mail@v3
@@ -56,7 +94,8 @@ jobs:
         server_port: 465
         username: ${{secrets.MAIL_USERNAME}}
         password: ${{secrets.MAIL_PASSWORD}}
-        subject: Model Training Pipeline Status
-        body: Model training completed. Check results in GitHub Actions.
+        subject: ${{ env.EMAIL_SUBJECT }}
+        body_path: email_body.txt
         to: ${{secrets.NOTIFICATION_EMAIL}}
         from: GitHub Actions
+        secure: true
