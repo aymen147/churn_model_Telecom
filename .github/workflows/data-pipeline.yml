@@ -33,7 +33,7 @@ jobs:
       run: python -m pytest
 
     - name: Upload processed data
-      uses: actions/upload-artifact@v3  # Updated from deprecated v2
+      uses: actions/upload-artifact@v4  # Updated from deprecated v2
       with:
         name: prepared-data
         path: prepared_data.joblib
