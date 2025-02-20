@@ -1,0 +1,6 @@
+{
+    "model_path": "deployment/model.pkl",
+    "model_type": "classification",
+    "version": "1.0",
+    "description": "Deployment configuration for the trained model."
+}

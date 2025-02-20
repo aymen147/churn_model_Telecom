@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/b413b59bddbd4c02b55c713f72783aed/artifacts
+end_time: 1739559533569
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: b413b59bddbd4c02b55c713f72783aed
+run_name: respected-mole-554
+run_uuid: b413b59bddbd4c02b55c713f72783aed
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739559533522
+status: 3
+tags: []
+user_id: aymen

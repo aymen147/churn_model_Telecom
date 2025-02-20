@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/003ecfd344ab4a6ba581eae464d57ebc/artifacts
+end_time: 1739557862238
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 003ecfd344ab4a6ba581eae464d57ebc
+run_name: incongruous-koi-31
+run_uuid: 003ecfd344ab4a6ba581eae464d57ebc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739557862189
+status: 3
+tags: []
+user_id: aymen

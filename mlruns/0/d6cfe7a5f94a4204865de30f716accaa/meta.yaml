@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/d6cfe7a5f94a4204865de30f716accaa/artifacts
+end_time: 1739532451007
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d6cfe7a5f94a4204865de30f716accaa
+run_name: bemused-deer-910
+run_uuid: d6cfe7a5f94a4204865de30f716accaa
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739532450969
+status: 3
+tags: []
+user_id: aymen

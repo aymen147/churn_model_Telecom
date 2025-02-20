@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/bc98228a802a4201b048d3d7348d0615/artifacts
+end_time: 1739875426452
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: bc98228a802a4201b048d3d7348d0615
+run_name: charming-newt-902
+run_uuid: bc98228a802a4201b048d3d7348d0615
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739875425984
+status: 3
+tags: []
+user_id: aymen

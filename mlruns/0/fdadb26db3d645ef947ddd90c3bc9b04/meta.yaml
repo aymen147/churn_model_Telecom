@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/fdadb26db3d645ef947ddd90c3bc9b04/artifacts
+end_time: 1739532576201
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: fdadb26db3d645ef947ddd90c3bc9b04
+run_name: persistent-mink-382
+run_uuid: fdadb26db3d645ef947ddd90c3bc9b04
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739532573409
+status: 3
+tags: []
+user_id: aymen

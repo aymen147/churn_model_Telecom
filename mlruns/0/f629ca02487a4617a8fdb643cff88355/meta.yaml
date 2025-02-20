@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/f629ca02487a4617a8fdb643cff88355/artifacts
+end_time: 1740036646660
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: f629ca02487a4617a8fdb643cff88355
+run_name: Model_Deployment
+run_uuid: f629ca02487a4617a8fdb643cff88355
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1740036643497
+status: 3
+tags: []
+user_id: aymen

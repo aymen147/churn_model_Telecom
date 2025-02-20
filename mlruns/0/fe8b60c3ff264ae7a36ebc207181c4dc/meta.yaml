@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/fe8b60c3ff264ae7a36ebc207181c4dc/artifacts
+end_time: 1739562555328
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: fe8b60c3ff264ae7a36ebc207181c4dc
+run_name: respected-perch-801
+run_uuid: fe8b60c3ff264ae7a36ebc207181c4dc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739562554985
+status: 3
+tags: []
+user_id: aymen

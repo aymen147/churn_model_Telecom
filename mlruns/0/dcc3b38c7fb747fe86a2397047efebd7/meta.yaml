@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/dcc3b38c7fb747fe86a2397047efebd7/artifacts
+end_time: 1739556834940
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: dcc3b38c7fb747fe86a2397047efebd7
+run_name: handsome-sponge-22
+run_uuid: dcc3b38c7fb747fe86a2397047efebd7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739556834881
+status: 3
+tags: []
+user_id: aymen

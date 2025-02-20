@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/c440312f720c408d80998eccde701fea/artifacts
+end_time: 1740036944076
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: c440312f720c408d80998eccde701fea
+run_name: receptive-dog-995
+run_uuid: c440312f720c408d80998eccde701fea
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1740036944046
+status: 3
+tags: []
+user_id: aymen

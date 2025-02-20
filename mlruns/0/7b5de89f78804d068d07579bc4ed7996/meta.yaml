@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/7b5de89f78804d068d07579bc4ed7996/artifacts
+end_time: 1740036828428
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 7b5de89f78804d068d07579bc4ed7996
+run_name: honorable-quail-334
+run_uuid: 7b5de89f78804d068d07579bc4ed7996
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1740036828418
+status: 3
+tags: []
+user_id: aymen

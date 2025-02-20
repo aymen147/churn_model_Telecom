@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/74a1fac642e84c8a85102b75e3d2572c/artifacts
+end_time: 1739530328341
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 74a1fac642e84c8a85102b75e3d2572c
+run_name: serious-koi-132
+run_uuid: 74a1fac642e84c8a85102b75e3d2572c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739530325274
+status: 3
+tags: []
+user_id: aymen

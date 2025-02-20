@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/45a09bdff0f84dcf98e90aabf1956d87/artifacts
+end_time: 1739532583560
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 45a09bdff0f84dcf98e90aabf1956d87
+run_name: flawless-hound-438
+run_uuid: 45a09bdff0f84dcf98e90aabf1956d87
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739532583537
+status: 3
+tags: []
+user_id: aymen

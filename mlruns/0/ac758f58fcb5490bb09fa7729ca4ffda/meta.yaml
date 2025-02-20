@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/ac758f58fcb5490bb09fa7729ca4ffda/artifacts
+end_time: 1739559533477
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: ac758f58fcb5490bb09fa7729ca4ffda
+run_name: angry-squid-86
+run_uuid: ac758f58fcb5490bb09fa7729ca4ffda
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739559530632
+status: 3
+tags: []
+user_id: aymen

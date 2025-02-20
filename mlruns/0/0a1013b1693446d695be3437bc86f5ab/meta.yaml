@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/0a1013b1693446d695be3437bc86f5ab/artifacts
+end_time: 1739562503013
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 0a1013b1693446d695be3437bc86f5ab
+run_name: upbeat-fox-361
+run_uuid: 0a1013b1693446d695be3437bc86f5ab
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739562500059
+status: 3
+tags: []
+user_id: aymen

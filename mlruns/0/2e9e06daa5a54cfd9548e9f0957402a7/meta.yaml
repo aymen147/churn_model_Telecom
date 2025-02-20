@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/2e9e06daa5a54cfd9548e9f0957402a7/artifacts
+end_time: 1739875411302
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 2e9e06daa5a54cfd9548e9f0957402a7
+run_name: crawling-fox-119
+run_uuid: 2e9e06daa5a54cfd9548e9f0957402a7
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739875410940
+status: 3
+tags: []
+user_id: aymen
