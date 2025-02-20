@@ -13,10 +13,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4  # Updated to latest version
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4  # Updated to latest version
+      uses: actions/setup-python@v4
       with:
         python-version: '3.8'
 
@@ -24,28 +24,59 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest  # Ensure pytest is installed
+        pip install pytest
 
     - name: Run data preparation
       run: python main.py --prepare
+      continue-on-error: false
 
     - name: Run data tests
       run: python -m pytest
+      continue-on-error: false
 
     - name: Upload processed data
-      uses: actions/upload-artifact@v4  # Updated from deprecated v2
+      uses: actions/upload-artifact@v4
+      if: success()
       with:
         name: prepared-data
         path: prepared_data.joblib
+        retention-days: 5
 
-    - name: Notify on completion
+    - name: Process completion status
+      if: always()
+      run: |
+        if [[ "${{ job.status }}" == "success" ]]; then
+          echo "PIPELINE_STATUS=✅ Data pipeline completed successfully" >> $GITHUB_ENV
+        else
+          echo "PIPELINE_STATUS=❌ Data pipeline failed" >> $GITHUB_ENV
+        fi
+
+    - name: Update status
       if: always()
       uses: actions/github-script@v6
       with:
+        github-token: ${{ secrets.TOKEN }}
         script: |
-          github.rest.issues.createComment({
-            issue_number: 1,  // Replace with a real issue number if needed
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: "Data pipeline completed successfully ✅"
-          });
+          const { owner, repo } = context.repo;
+          
+          // Create a detailed status message
+          const status = process.env.PIPELINE_STATUS;
+          const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+          const message = `${status}\n\nWorkflow run: [View details](${runUrl})`;
+          
+          try {
+            // Try to create a new issue
+            const issue = await github.rest.issues.create({
+              owner,
+              repo,
+              title: `Data Pipeline Run ${new Date().toISOString().split('T')[0]}`,
+              body: message,
+              labels: ['data-pipeline']
+            });
+            console.log(`Created issue #${issue.data.number}`);
+          } catch (error) {
+            console.log('Failed to create issue:', error.message);
+            
+            // Log the status to the workflow
+            console.log(message);
+          }
