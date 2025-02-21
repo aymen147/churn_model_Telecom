@@ -10,7 +10,6 @@ on:
 jobs:
   train-and-evaluate:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     
     steps:
     - name: Checkout repository
@@ -26,25 +25,29 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest
+        pip install joblib  # Ensure joblib is installed for loading .joblib files
 
     - name: Download processed data
-      id: download-data
       uses: actions/download-artifact@v4
       with:
         name: prepared-data
-        path: .  # This downloads to the root of workspace
+        path: .  # Download to the root of the workspace
+
+    - name: Debug downloaded artifact
+      run: |
+        echo "Files in workspace after download:"
+        ls -la  # List all files in the root directory
 
     - name: Verify data download
       run: |
         if [ ! -f "prepared_data.joblib" ]; then
-          echo "Error: prepared_data.joblib not found"
+          echo "Error: prepared_data.joblib not found in root directory"
           ls -la  # List files to help debug
           exit 1
         fi
 
     - name: Train model
       id: training
-      if: success()
       run: |
         python main.py --train
       continue-on-error: false
@@ -86,18 +89,16 @@ jobs:
     - name: Generate email body
       if: always()
       run: |
-        cat << EOF > email_body.txt
-        Model Training Pipeline Status Update
+        echo "Model Training Pipeline Status Update
         
         Status: ${{ env.MODEL_STATUS }}
         
         Details:
-        - Workflow Run ID: ${{ github.run_id }}
-        - Run Number: ${{ github.run_number }}
-        - Triggered By: ${{ github.event_name }}
+        - Repository: ${{ github.repository }}
+        - Branch: ${{ github.ref }}
+        - Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         
-        This is an automated message from GitHub Actions.
-        EOF
+        This is an automated message from GitHub Actions." > email_body.txt
 
     - name: Send email notification
       if: always()
