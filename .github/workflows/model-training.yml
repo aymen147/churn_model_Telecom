@@ -5,111 +5,71 @@ on:
     workflows: ["Data Pipeline"]
     types:
       - completed
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
   train-and-evaluate:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest
-        pip install joblib  # Ensure joblib is installed for loading .joblib files
-
-    - name: Download processed data
-      uses: actions/download-artifact@v4
-      with:
-        name: prepared-data
-        path: .  # Download to the root of the workspace
-
-    - name: Debug downloaded artifact
-      run: |
-        echo "Files in workspace after download:"
-        ls -la  # List all files in the root directory
-
-    - name: Verify data download
-      run: |
-        if [ ! -f "prepared_data.joblib" ]; then
-          echo "Error: prepared_data.joblib not found in root directory"
-          ls -la  # List files to help debug
-          exit 1
-        fi
-
-    - name: Train model
-      id: training
-      run: |
-        python main.py --train
-      continue-on-error: false
-
-    - name: Evaluate model
-      id: evaluation
-      if: success()
-      run: |
-        python main.py --evaluate
-      continue-on-error: false
-
-    - name: Run model tests
-      if: success()
-      run: |
-        python -m pytest
-
-    - name: Upload model artifacts
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: model-artifacts
-        path: |
-          model.joblib
-          metrics/confusion_matrix.png
-          metrics/classification_report.txt
-        retention-days: 30
-
-    - name: Process completion status
-      if: always()
-      run: |
-        if [[ "${{ job.status }}" == "success" ]]; then
-          echo "MODEL_STATUS=✅ Model training completed successfully" >> $GITHUB_ENV
-          echo "EMAIL_SUBJECT=Model Training Success - $(date +'%Y-%m-%d')" >> $GITHUB_ENV
-        else
-          echo "MODEL_STATUS=❌ Model training failed" >> $GITHUB_ENV
-          echo "EMAIL_SUBJECT=Model Training Failed - $(date +'%Y-%m-%d')" >> $GITHUB_ENV
-        fi
-
-    - name: Generate email body
-      if: always()
-      run: |
-        echo "Model Training Pipeline Status Update
-        
-        Status: ${{ env.MODEL_STATUS }}
-        
-        Details:
-        - Repository: ${{ github.repository }}
-        - Branch: ${{ github.ref }}
-        - Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        
-        This is an automated message from GitHub Actions." > email_body.txt
-
-    - name: Send email notification
-      if: always()
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: ${{secrets.MAIL_SERVER}}
-        server_port: 465
-        username: ${{secrets.MAIL_USERNAME}}
-        password: ${{secrets.MAIL_PASSWORD}}
-        subject: ${{ env.EMAIL_SUBJECT }}
-        body_path: email_body.txt
-        to: ${{secrets.NOTIFICATION_EMAIL}}
-        from: GitHub Actions
-        secure: true
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+          pip install joblib
+      
+      - name: Download processed data
+        uses: actions/download-artifact@v4
+        with:
+          name: prepared-data
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+      
+      - name: Train model
+        id: training
+        run: python main.py --train
+        continue-on-error: false
+      
+      - name: Evaluate model
+        id: evaluation
+        if: success()
+        run: python main.py --evaluate
+        continue-on-error: false
+      
+      - name: Run model tests
+        if: success()
+        run: python -m pytest
+      
+      - name: Upload model artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-artifacts
+          path: |
+            model.joblib
+            metrics/confusion_matrix.png
+            metrics/classification_report.txt
+          retention-days: 30
+      
+      - name: Process completion status
+        if: always()
+        run: |
+          if [[ "${{ job.status }}" == "success" ]]; then
+            echo "MODEL_STATUS=✅ Model training completed successfully" >> $GITHUB_ENV
+            echo "EMAIL_SUBJECT=Model Training Success - $(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          else
+            echo "MODEL_STATUS=❌ Model training failed" >> $GITHUB_ENV
+            echo "EMAIL_SUBJECT=Model Training Failed - $(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          fi
